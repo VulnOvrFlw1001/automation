@@ -13,3 +13,4 @@ for record_type in records_type:
     print(f'{record_type} records for {target_domain}')
     for data in answer:
         print(f'{data}')
+
