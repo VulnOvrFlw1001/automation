@@ -1,0 +1,25 @@
+import PyPDF2
+import sys
+
+def create_password_protected_pdf(input_pdf, output_pdf, password):
+    try:
+        with open(input_pdf, 'rb') as pdf_file:
+            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            pdf_writer = PyPDF2.PdfFileWriter()
+
+            for page_num in range(len(pdf_reader.pages)):
+                pdf_writer.add_page(pdf_reader.pages[page_num])
+
+            pdf_writer.enrypt(password)
+
+            with open(output_pdf, 'wb') as output_file:
+                pdf_writer.write(output_file)
+
+            print(f"Password-protected PDF saved as {output_pdf}")
+
+    except FileNotFoundError:
+        print(f"The file {input_pdf} was not found.")
+    except PyPDF2.utils.PdfReadError:
+        print(f"The file {input_pdf} is not a valid PDF.")
+    except Exception as e:
+        print(f"Eroor: {e}")
