@@ -1,5 +1,9 @@
 import itertools
 import pikepdf
+from tqdm import tqdm
+import string
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import argparse
 
 def generate_passwords(chars, min_length, max_length):
     for length in range(min_length, max_length + 1):
@@ -18,3 +22,4 @@ def try_password(pdf_file, password):
             return password
     except pikepdf._core.PasswordError:
         return None
+
