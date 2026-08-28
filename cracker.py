@@ -23,3 +23,15 @@ def try_password(pdf_file, password):
     except pikepdf._core.PasswordError:
         return None
 
+def decrypt_pdf(pdf_file, passwords, total_passwords, max_workers=4):   
+    with tqdm(total=total_passwords, desc='Decrypting PDF', unit='password') as pbar:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_passwords = {executor.submit(try_password, pdf_file, pwd): pwd for pwd in passwords}
+
+            for future in tqdm(future_to_passwords, total=total_passwords):
+                password = future_to_passwords[future]
+                if future.result():
+                    return future.result()
+                pbar.update(1)
+        print('Unable to decrypt PDF. Passowrd is not found.')
+        return None
