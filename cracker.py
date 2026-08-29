@@ -10,7 +10,7 @@ def generate_passwords(chars, min_length, max_length):
         for password in  itertools.product(chars, repeat=length):
             yield ''.join(password)
 
-def load_wordllist(wordlist_file):
+def load_wordlist(wordlist_file):
     with open(wordlist_file, 'r') as file:
         for line in file:
             yield line.strip()
@@ -51,3 +51,16 @@ if __name__ == '__main__':
     if args.generate():
         passwords = generate_passwords(args.charset, args.min_length, args.max_length)
         total_passwords = sum(1 for _ in generate_passwords(args.charset, args.min_length, args.max_length))
+    elif args.wordlist:
+        passwords = load_wordlist(args.wordlist)
+        total_passwords = sum(1 for _ in load_wordlist(args.wordlist)) 
+    else:
+        print("Either --wordlist must be provided or --generate must be specified.")
+        exit(1)
+
+    decrypted_password = decrypt_pdf(args.pdf_file, passwords, total_passwords, args.max_workers)
+
+    if decrypted_password:
+        print(f"PDF decrypted successfully with password: {decrypted_password}")
+    else:
+        print(f"Unable to decrypt PDF. Password not found.") 
