@@ -43,3 +43,11 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--generate', action='store_true', help='Generate passwords on the fly.')
     parser.add_argument('-min', '--min_length', type=int, help='Minimum length of password to generate.', default=1)
     parser.add_argument('-max', '--max_length', type=int, help='Maximum length of password to generate.', default=3)
+    parser.add_argument('-c', '--charset', type=str, help='Characters to use for password generation', default=string.ascii_letters + string.digits + string.punctuation)
+    parser.add_argument('--max_workers', type=int, help='Maximum workers of parallel threads', default=4)
+
+    args = parser.parse_args()
+
+    if args.generate():
+        passwords = generate_passwords(args.charset, args.min_length, args.max_length)
+        total_passwords = sum(1 for _ in generate_passwords(args.charset, args.min_length, args.max_length))
