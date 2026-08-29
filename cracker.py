@@ -35,3 +35,11 @@ def decrypt_pdf(pdf_file, passwords, total_passwords, max_workers=4):
                 pbar.update(1)
         print('Unable to decrypt PDF. Passowrd is not found.')
         return None
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Decrypt a password-protected PDF file.")
+    parser.add_argument('pdf_file', help='Path to the password-protected PDF file.')
+    parser.add_argument('-w', '--wordlist', help='Path to the passwords list file.', default=None) 
+    parser.add_argument('-g', '--generate', action='store_true', help='Generate passwords on the fly.')
+    parser.add_argument('-min', '--min_length', type=int, help='Minimum length of password to generate.', default=1)
+    parser.add_argument('-max', '--max_length', type=int, help='Maximum length of password to generate.', default=3)
