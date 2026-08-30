@@ -1,5 +1,8 @@
 import scapy.all as scapy
 import socket
+import threading
+from queue import Queue
+import ipaddress
 
 def scan(ip):
     arp_request = scapy.ARP(pdst=ip)
@@ -22,3 +25,12 @@ def print_result(result):
     print('-'*80)
     for client in result:
         print(client['IP'] + '\t\t' + client['MAC'] + '\t\t' + client['Hostname'])
+
+def main(cidr):
+    results_queue = Queue()
+    threads = []
+    network = ipaddress.ip_network(cidr, strict=False)
+
+    for ip in network.hosts():
+        thread = threading.Thread(target=scan,args=(str(ip), results_queue))
+        thread.start()
