@@ -4,7 +4,7 @@ import threading
 from queue import Queue
 import ipaddress
 
-def scan(ip):
+def scan(ip, result_queue):
     arp_request = scapy.ARP(pdst=ip)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     packet = broadcast/arp_request
@@ -19,6 +19,7 @@ def scan(ip):
         except socket.herror:
             client_info['Hostname'] = 'Unknown'
         clients.append(client_info)
+    result_queue.put(clients)
 
 def print_result(result):
     print('IP' + " "*20 + 'MAC' + " "*20 + 'Hostname')
@@ -34,3 +35,17 @@ def main(cidr):
     for ip in network.hosts():
         thread = threading.Thread(target=scan,args=(str(ip), results_queue))
         thread.start()
+        threads.append(thread)
+
+    for rthread in threads:
+        thread.join()
+
+    all_clients = []
+    while not results_queue.empty():
+        all_clients.extend(results_queue.get())
+
+    print_result(all_clients)
+
+if __name__ == '__main__':
+    cidr = input("Enter network IP address: ")
+    main(cidr)
