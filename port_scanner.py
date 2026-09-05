@@ -1,4 +1,6 @@
 import socket
+import concurrent.futures
+import sys
 
 def get_banner(sock):
     try:
@@ -26,3 +28,10 @@ def scan_port(target_ip, port):
         return port, "", "", False
     finally:
         sock.close()
+
+def port_scan(target_host, start_port, end_port):
+    target_ip = socket.gethostbyname(target_host)
+    print(f"starting scan on host: {target_ip}")
+
+    results = []
+    
