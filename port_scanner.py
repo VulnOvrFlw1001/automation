@@ -1,7 +1,12 @@
 import socket
 
 def get_banner(sock):
-    pass
+    try:
+        sock.settimeout(1)
+        banner = sock.recv(1024).decode().strip()
+        return banner
+    except:
+        return " "
 
 def scan_port(target_ip, port): 
     try:
@@ -14,3 +19,10 @@ def scan_port(target_ip, port):
             except:
                 service = 'Unknown'
             banner = get_banner(sock)
+            return port, service, banner, True
+        else:
+            return port, "", "", False
+    except:
+        return port, "", "", False
+    finally:
+        sock.close()
