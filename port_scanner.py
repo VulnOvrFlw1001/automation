@@ -2,6 +2,9 @@ import socket
 import concurrent.futures
 import sys
 
+def format_port_results(results):
+    pass
+
 def get_banner(sock):
     try:
         sock.settimeout(1)
@@ -42,3 +45,6 @@ def port_scan(target_host, start_port, end_port):
             results.append((port, service, banner, status))
             sys.stdout.write(f"\rProgress: {i}/total_ports ports scanned")
             sys.stdout.flush()
+
+    sys.stdout.write("/n")
+    print(format_port_results)
