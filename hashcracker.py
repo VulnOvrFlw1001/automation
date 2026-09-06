@@ -3,6 +3,7 @@ import itertools
 import string
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
+import argparse
 
 hash_name = [
     'md5',
@@ -54,3 +55,23 @@ def crack_hash(hash, wordlist=None, hash_type='md5', min_length=0, max_length=0,
                     if future.result():
                         return pwd
     return None
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Hash cracker')
+    parser.add_argument('hash', help='The hash to crack')
+    parser.add_argument('-w', '--wordlist', help='The path to the wordlist.')
+    parser.add_argument('--hash_type', help='The hash to use', default='md5')
+    parser.add_argument('--min_length', type=int, help='The minimum length of password to generate.')
+    parser.add_argument('--max_length', type=int, help='The maximum length of password to generate.')
+    parser.add_argument('-c', '--characters', help='The characters to use for password generation.')
+    parser.add_argument('--max_workers', type=int, help='The maximum number of threads.')
+
+    args= parser.parse_args()
+
+    print()
+    cracked_password = crack_hash(args.hash, args.wordlist, args.hash_type, args.min_length, args.max_length, args.characters, args.max_workers)
+
+    if cracked_password:
+        print(f"[+] Found password:  {cracked_password}")
+    else:
+        print("[!] Password not found.")
