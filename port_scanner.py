@@ -34,4 +34,9 @@ def port_scan(target_host, start_port, end_port):
     print(f"starting scan on host: {target_ip}")
 
     results = []
-    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=400) as executor:
+        futures = {executor.submit(scan_port, target_ip, port): port for port in range(start_port, end_port + 1)}
+        total_ports = end_port - start_port + 1
+        for i, future in enumerate(concurrent.futures.as_completed(futures), start=1)
+            port, service, banner, status = future.result()
+            results.append((port, service, banner, status))
