@@ -2,8 +2,22 @@ import socket
 import concurrent.futures
 import sys
 
+RED = "\033[91m"
+GREEN = "\33[92m"
+RESET = "\033[0m"
+
 def format_port_results(results):
-    pass
+    formatted_results = "Port Scan Results:\n"
+    formatted_results += "{:<8} {:15} {:<10}\n".format("Port", "Service", "Status")
+    formatted_results += '-' * 85 + "\n"
+    for port, service, banner, status in results:
+        if status:
+            formatted_results = f"{RED}{port:<8} {service:<15} {'Open':<10}{RESET}\n"
+            if banner:
+                banner_lines = banner.split('\n')
+                for line in banner_lines:
+                    formatted_results += f"{GREEN}{'':<8}{line}{RESET}\n"
+    return formatted_results
 
 def get_banner(sock):
     try:
@@ -48,3 +62,10 @@ def port_scan(target_host, start_port, end_port):
 
     sys.stdout.write("/n")
     print(format_port_results)
+
+if __name__ == '__main__':
+    target_host = input("Enter your target ip: ")
+    start_port = int(input("Enter the start port: "))
+    end_port = int(input("Enter end port: "))
+
+    port_scan(target_host, start_port, end_port)
