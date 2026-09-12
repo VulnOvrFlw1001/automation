@@ -72,3 +72,39 @@ def main():
     args = parser.parse_args()
     host = args.host
     threads = args.threads
+
+    if not args.user and not args.userlist:
+        print("Please provide a single username or a usernames file.")
+        sys.exit(1)
+
+    if args.userslist:
+        users = load_lines(args.userlist)
+    else:
+        users = [args.user]
+    if args.passlist:
+        passwords = load_lines(args.passlist)
+    elif args.generate:
+        passwords = generate_passwords(args.min_length, args.max_length, args.chars)
+    else:
+        print('Please provide a password list or specify to generate passwords.')
+        sys.exit(1)
+    if args.passlist:
+        print(f'[+] Usernames to try: {len(users)}')
+        print(f'[+] Passwords to try: {len(passwords)}')
+    else:
+        print(f'[+] Usernames to try: {len(users)}')
+        print(f'[+] Generating passwords on the fly.')
+
+    for user in users:
+        for password in passwords:
+            q.put((user, password))
+
+    for _ in range(threads):
+        thread = Thread(target=worker, args=(host,))
+        thread.daemon = True
+        thread.start()
+
+    q.join()
+
+if __name__ == '__main__':
+    main()
