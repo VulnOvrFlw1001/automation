@@ -67,7 +67,7 @@ def main():
     parser.add_argument('--min_length', type=int, help='The minimum length to generate passwords.')
     parser.add_argument('--max_length', type=int, help='The maximum length to generate passwords.')
     parser.add_argument('-c', '--chars', type=str, help='Characters to use for password generation.')
-    parser.add_argument('-t', '--threads', type=int, help='Number of threads to use')
+    parser.add_argument('-t', '--threads', type=int, help='Number of threads to use', default=4)
 
     args = parser.parse_args()
     host = args.host
