@@ -46,7 +46,7 @@ def generate_passwords(min_length, max_length, chars):
             yield ''.join(password)
 
 def main():
-    parser = argparse.ArgumentParser(description="FTP Brute Force."):
+    parser = argparse.ArgumentParser(description="FTP Brute Force.")
     parser.add_argument('--host', type=str, required=True, help='FTP server host or IP.')
     parser.add_argument('--port', type=int, default=21, help='FTP server port. Default is 21.')
     parser.add_argument('-t', '--threads', type=int, default=3, help='Number of threads to use.')
