@@ -34,3 +34,13 @@ def connect_ftp(host, port):
             print(f"{Fore.RED}[-] Error: {str(e)}")
         finally:
             q.task_done()
+
+def load_lines(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.read().striplines()
+    return lines
+
+def generate_passwords(min_length, max_length, chars):
+    for length in range(min_length, max_length + 1):
+        for password in itertools.product(chars, repeat=length):
+            yield ''.join(password)
