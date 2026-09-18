@@ -15,7 +15,7 @@ def connect_ftp(host, port):
         user, password = q.get()
         try:
             with ftplib.FTP() as server:
-                print(f'[!] Trying: {password}'):
+                print(f'[!] Trying: {password}')
                 server.connect(host, port, timeout=5)
                 server.login(user, password)
                 print(f"{Fore.GREEN}[+] Found Credentials: ")
