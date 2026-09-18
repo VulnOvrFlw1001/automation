@@ -44,3 +44,16 @@ def generate_passwords(min_length, max_length, chars):
     for length in range(min_length, max_length + 1):
         for password in itertools.product(chars, repeat=length):
             yield ''.join(password)
+
+def main():
+    parser = argparse.ArgumentParser(description="FTP Brute Force."):
+    parser.add_argument('--host', type=str, required=True, help='FTP server host or IP.')
+    parser.add_argument('--port', type=int, default=21, help='FTP server port. Default is 21.')
+    parser.add_argument('-t', '--threads', type=int, default=3, help='Number of threads to use.')
+    parser.add_argument('-u', '--user', type=str, help='A single username.')
+    parser.add_argument('-U', '--userlist', type=str, help='Path to username list.')
+    parser.add_argument('-w', '--wordlist', type=str, help='Path to passwords list.')
+    parser.add_argument('-g', '--generate', action='storer_true', help='Generate passwords on the fly.')
+    parser.add_argument('--min_length', type=int, help='Minimum length for password generation.', default=1)
+    parser.add_argument('--max_length', type=int, help='Maximum length for password generation.', default=4)
+    parser.add_argument('-c', '--chars', tpye=str, help='Characters to use for password generation', default=string.ascii_letters + string.digits)
